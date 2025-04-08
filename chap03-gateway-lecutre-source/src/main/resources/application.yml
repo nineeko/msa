@@ -14,6 +14,16 @@ spring:
           # 요청 경로가 이 패턴과 일치하는 경우 지금의 route 설정이 활성화됨.
           predicates:
             - Path=/first-service/**
+          # 요청이나 응답에 대해 수행할 필터 설정
+          # /first-service/health 요청을 /health로 변경해서 처리
+          filters:
+            - RewritePath=/first-service/(?<segment>.*), /$\{segment}
+        - id: 2nd-service
+          uri: lb://2ND-SERVICE
+          predicates:
+            - Path=/second-service/**
+          filters:
+            - RewritePath=/second-service/(?<segment>.*), /$\{segment}
 eureka:
   client:
     fetch-registry: true
